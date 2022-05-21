@@ -1,6 +1,8 @@
 # neat-date-time crate
 
-(native) Types & operations to allow space efficient storage of dates and times.
+Dense & serializable representations of dates & times, providing
+native types & operations to allow space efficient storage.
+
 
 # Problem statement
 
@@ -25,6 +27,7 @@ Adittionaly, serialization is aided by allowing representing date & times in nat
 
 # Usage example
 
+## Time
 ```rust
 use neat_date_time::neat_time;
 
@@ -36,6 +39,20 @@ let observed_duration = duration_from_24h_u32(u32_duration);
 assert_eq!(observed_duration, expected_duration, "std duration <--> u32 conversions failed");
 ```
 
+## `u32` date
+```rust
+use neat_date_time::neat_date;
+
+let (original_year, original_month, original_day) = (1979, 01, 22);
+let epoch = u32_from_ymd(original_year as u16, original_month as u8, original_day as u8);
+dbg!(epoch);
+let (reconstructed_year, reconstructed_month, reconstructed_day) = ymd_from_u32(epoch);
+assert_eq!((reconstructed_year, reconstructed_month, reconstructed_day), (original_year, original_month, original_day), "naive dates <--> u32 conversions failed");
+```
+
+
 # Notes
 
 This is the first version, just refactored out from existing code. The next version will have a better API for general use.
+
+Currently, `u16` dates are representable as a delta from a `u32` date: just add or subtract the `u16` date to/from the `u32` absolute date.
