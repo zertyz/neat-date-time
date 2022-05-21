@@ -1,0 +1,20 @@
+[package]
+name = "neat-date-time"
+version = "0.1.0"
+edition = "2021"
+description   = "(native) Types & operations to allow space efficient storage of dates and times"
+keywords      = ["pack", "packed", "compact", "dense", "date", "time"]
+categories    = ["encoding", "optimization", "low-mem"]
+readme        = "README.md"
+authors       = ["Luiz Silveira <zertyz@gmail.com>"]
+homepage      = "https://github.com/zertyz/neat-date-time"
+repository    = "https://github.com/zertyz/neat-date-time"
+documentation = "https://docs.rs/neat-date-time/"
+license       = "The JSON License"
+
+
+[workspace]
+
+[dependencies]
+
+#chrono = "0.4"
