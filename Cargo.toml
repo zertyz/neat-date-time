@@ -10,7 +10,7 @@ authors       = ["Luiz Silveira <zertyz@gmail.com>"]
 homepage      = "https://github.com/zertyz/neat-date-time"
 repository    = "https://github.com/zertyz/neat-date-time"
 documentation = "https://docs.rs/neat-date-time/"
-license       = "The JSON License"
+license       = "Unlicense"
 
 
 [workspace]
