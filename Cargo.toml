@@ -1,10 +1,10 @@
 [package]
 name = "neat-date-time"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description   = "(native) Types & operations to allow space efficient storage of dates and times"
 keywords      = ["packed", "compact", "dense", "date", "time"]
-categories    = ["encoding", "optimization", "low-mem"]
+categories    = ["encoding", "compression"]
 readme        = "README.md"
 authors       = ["Luiz Silveira <zertyz@gmail.com>"]
 homepage      = "https://github.com/zertyz/neat-date-time"
