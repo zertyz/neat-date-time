@@ -3,5 +3,5 @@
 #![doc = include_str!("../README.md")]
 
 
-mod packed_date;
-mod packed_time;
+mod neat_date;
+mod neat_time;
