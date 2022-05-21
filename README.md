@@ -26,13 +26,14 @@ Adittionaly, serialization is aided by allowing representing date & times in nat
 # Usage example
 
 ```rust
-use neat_date_time::neat_date;
+use neat_date_time::neat_time;
 
-let (original_year, original_month, original_day) = (1979, 01, 22);
-let epoch = u32_from_ymd(original_year as u16, original_month as u8, original_day as u8);
-dbg!(epoch);
-let (reconstructed_year, reconstructed_month, reconstructed_day) = ymd_from_u32(epoch);
-assert_eq!((reconstructed_year, reconstructed_month, reconstructed_day), (original_year, original_month, original_day), "naive dates <--> u32 conversions failed");
+let (h, m, s, ms, µs) = (17, 32, 42, 937, 0);
+let expected_duration = std::time::Duration::from_micros(µs+(ms+(s+(m+h*60)*60)*1000)*1000);
+let u32_duration = u32_from_24h_duration(duration);
+dbg!(u32_duration);
+let observed_duration = duration_from_24h_u32(u32_duration);
+assert_eq!(observed_duration, expected_duration, "std duration <--> u32 conversions failed");
 ```
 
 # Notes
