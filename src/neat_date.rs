@@ -3,7 +3,7 @@
 
 use lazy_static::lazy_static;
 
-/// how many fractional days there is in a year
+/// how many fractional days there are in a year
 const LEAP_YEAR_FACTOR: f64 = (400.0*365.0 + 400.0/4.0-400.0/100.0+400.0/400.0) / 400.0;
 
 /// days for each month for non-leap years -- January is #0
@@ -28,7 +28,7 @@ lazy_static! {
         );
 }
 
-/// returns an `u32` to represent a "naive date" (with no timezone consideration) from
+/// returns a `u32` to represent a "naive date" (with no timezone consideration) from
 /// the given `year`, `month` and `day`.\
 /// See [ymd_from_u32()] for the reverse operation.
 pub fn u32_from_ymd(year: u16, month: u8, day: u8) -> u32 {
@@ -49,8 +49,9 @@ pub fn u32_from_ymd(year: u16, month: u8, day: u8) -> u32 {
 pub fn ymd_from_u32(date: u32) -> (u16, u8, u8) {
     
     let year0f = date as f64 / LEAP_YEAR_FACTOR;
-    let mut year1 = year0f as u32 + 1;
-    let leap_days_since_era_start = ((year1-1) / 4 - (year1-1) / 100 + (year1-1) / 400) as u32;
+    let year0 = year0f as u32;
+    let leap_days_since_era_start = year0 / 4 - year0 / 100 + year0 / 400;
+    let mut year1 = year0 + 1;
     let days_up_to_year_start = (leap_days_since_era_start*366) + ((year1 as u32 - leap_days_since_era_start - 1)*365);
 
     let year_day = date - days_up_to_year_start;
@@ -98,9 +99,9 @@ pub fn string_from_u32(date: u32) -> String {
     string_from_ymd(year, month, day)
 }
 
-/// returns whether there is a "29th feb" day for the given `year`
-fn is_leap_year(year: u16) -> bool {
-    year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+/// returns whether there is a "29th feb" day for the given `year` (starting at year #1)
+pub fn is_leap_year(year1: u16) -> bool {
+    year1 % 4 == 0 && (year1 % 100 != 0 || year1 % 400 == 0)
 }
 
 

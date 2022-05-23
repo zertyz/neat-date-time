@@ -82,7 +82,7 @@ pub fn systemtime_from_10µs_precision_u32(duration: u32, epoch: &SystemTime) ->
 mod tests {
     use super::*;
 
-    /// tests almost 12h 10µs precision time conversions to `u32` and vice-versa
+    /// tests (the almost 12h range) 10µs precision time conversions to `u32` and vice-versa
     #[cfg_attr(not(feature = "dox"), test)]
     fn test_10µs_precision_functions() {
         let valid_durations = [
@@ -100,7 +100,7 @@ mod tests {
         assert_constant_time_quantum(0, duration_from_10µs_precision_u32);
     }
 
-    /// tests 24hs time conversions to `u32` and vice-versa
+    /// tests (the almost 24hs range) time conversions to `u32` and vice-versa
     #[cfg_attr(not(feature = "dox"), test)]
     fn test_24h_range_functions() {
         let valid_durations = [
@@ -129,8 +129,8 @@ mod tests {
     /// tests 24hs times to string
     #[cfg_attr(not(feature = "dox"), test)]
     fn test_24h_range_to_string() {
-        assert_eq!(string_from_24h_u32(1),                                                              "00:00:00.000.020", "Minimum time quantum check");
-        assert_eq!(string_from_24h_u32(u32_from_24h_duration(&Duration::from_millis(1))), "00:00:00.001.006", "Millis check");
+        assert_eq!(string_from_24h_u32(1),                                                 "00:00:00.000.020", "Minimum time quantum check");
+        assert_eq!(string_from_24h_u32(u32_from_24h_duration(&Duration::from_millis(1))),  "00:00:00.001.006", "Millis check");
         assert_eq!(string_from_24h_u32(u32_from_24h_duration(&Duration::from_secs(1))),    "00:00:00.999.995", "Seconds check");
         assert_eq!(string_from_24h_u32(u32_from_24h_duration(&Duration::from_secs(60))),   "00:00:59.999.996", "Minutes check");
         assert_eq!(string_from_24h_u32(u32_from_24h_duration(&Duration::from_secs(3600))), "01:00:00.000.007", "Hours check");
