@@ -132,10 +132,10 @@ mod tests {
             for month in 1..=12 {
                 for day in 1..=month_days[month as usize - 1] as u8 {
                     let observed_u32_date = u32_from_ymd(year, month, day);
-                    assert_eq!(observed_u32_date, expected_u32_date, "`u32` date values differ for date {} while traversing all possible dates", string_from_ymd(year, month, day));
+                    assert_eq!(observed_u32_date, expected_u32_date, "`u32` encoded date value is wrong for date {} while traversing all possible dates", string_from_ymd(year, month, day));
                     let (reconstituted_year, reconstituted_month, reconstituted_day) = ymd_from_u32(observed_u32_date);
                     assert_eq!((reconstituted_year, reconstituted_month, reconstituted_day),
-                               (year, month, day), "dates differ while encoding/decoding all possible dates");
+                               (year, month, day), "reconstituted date is wrong while encoding/decoding all possible dates");
                     expected_u32_date += 1;
                 }
             }
