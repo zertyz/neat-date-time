@@ -10,7 +10,7 @@ use std::{
 };
 
 
-/// returns an `u32` capable of representing 24 hours (or exactly 86399.99996 seconds) from a duration structure, with a precision
+/// returns a `u32` capable of representing 24 hours (or exactly 86399.99996 seconds) from a duration structure, with a precision
 /// of ~20.117µs (exactly `1/((2^32)/86400)*1e6`µs).\
 /// Notice, however, this function is not able to exactly represent regular durations like 17:00:00.0000 -- it will always
 /// fall into the closest rounded approximation (in this case, 16:59:59.999993).\

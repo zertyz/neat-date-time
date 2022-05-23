@@ -17,4 +17,10 @@ license       = "Unlicense"
 
 [dependencies]
 
-#chrono = "0.4"
+lazy_static = "1.4"
+
+[build.dependencies]
+
+#chrono = "0.4"     # Date and time library for Rust
+
+# eventually chrono will be moved to [dependencies], if we're ever to support NaiveDate conversions
