@@ -1,8 +1,6 @@
 //! Constains utility functions for storing dates (either absolute `u32` or relative `u16`),
 //! so as to save space when compared to `chrono::NaiveDate` -- up to 2x saving.
 
-use lazy_static::lazy_static;
-
 /// how many fractional days there are in a year
 const LEAP_YEAR_FACTOR: f64 = (400.0*365.0 + 400.0/4.0-400.0/100.0+400.0/400.0) / 400.0;
 
@@ -12,32 +10,23 @@ const MONTH_DAYS: [u32; 12] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 /// days for each month for leap years -- January is #0
 const MONTH_DAYS_LEAP_YEAR: [u32; 12] = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-lazy_static! {
-    /// year's completed days when each month starts -- January: #0 = 0, meaning: zero completed days for the year at Jan 1st
-    static ref DAYS_UP_TO_MONTH_START: [u32; 12] = [0,1,2,3,4,5,6,7,8,9,10,11]
-        .map(|month0| (1..=month0)
-            .map(|month| MONTH_DAYS[month-1])
-            .sum()
-        );
+/// year's completed days when each month starts -- January: #0 = 0, meaning: zero completed days for the year at Jan 1st
+const DAYS_UP_TO_MONTH_START: [u32; 12] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
 
-    /// same as [DAYS_UP_TO_MONTH_START], but for leap years
-    static ref DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS: [u32; 12] = [0,1,2,3,4,5,6,7,8,9,10,11]
-        .map(|month0| (1..=month0)
-            .map(|month| MONTH_DAYS_LEAP_YEAR[month-1])
-            .sum()
-        );
-}
+/// same as [DAYS_UP_TO_MONTH_START], but for leap years
+const DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS: [u32; 12] = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
+
 
 /// returns a `u32` to represent a "naive date" (with no timezone consideration) from
 /// the given `year`, `month` and `day`.\
 /// See [ymd_from_u32()] for the reverse operation.
-pub fn u32_from_ymd(year: u16, month: u8, day: u8) -> u32 {
+pub const fn u32_from_ymd(year: u16, month: u8, day: u8) -> u32 {
     let leap_days_since_era_start = ((year-1) / 4 - (year-1) / 100 + (year-1) / 400) as u32;
     let era_days_to_year_start = (leap_days_since_era_start*366) + ((year as u32 - leap_days_since_era_start - 1)*365);
 
     let year_day = match is_leap_year(year) {
-        true  => DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS.as_ref(),
-        false => DAYS_UP_TO_MONTH_START.as_ref(),
+        true  => DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS,
+        false => DAYS_UP_TO_MONTH_START,
     }[month as usize - 1] + (day as u32 - 1);
 
     era_days_to_year_start + year_day
@@ -100,7 +89,7 @@ pub fn string_from_u32(date: u32) -> String {
 }
 
 /// returns whether there is a "29th feb" day for the given `year` (starting at year #1)
-pub fn is_leap_year(year1: u16) -> bool {
+pub const fn is_leap_year(year1: u16) -> bool {
     year1 % 4 == 0 && (year1 % 100 != 0 || year1 % 400 == 0)
 }
 
@@ -108,6 +97,28 @@ pub fn is_leap_year(year1: u16) -> bool {
 #[cfg(any(test, feature = "dox"))]
 mod tests {
     use super::*;
+
+    /// unusual test function to generate our "complex" constants.\
+    /// NOTE: using lazy_static is not an option, as lazy_static outcomes cannot be used in const functions.\
+    /// TODO: when Rust allows [].map(|| ...); for constants, we may drop this hack
+    #[cfg_attr(not(feature = "dox"), test)]
+    fn build_constants() {
+        let days_up_to_month_start: [u32; 12] = [0,1,2,3,4,5,6,7,8,9,10,11]
+        .map(|month0| (1..=month0)
+            .map(|month| MONTH_DAYS[month-1])
+            .sum()
+        );
+        println!("/// year's completed days when each month starts -- January: #0 = 0, meaning: zero completed days for the year at Jan 1st");
+        println!("const DAYS_UP_TO_MONTH_START: [u32; 12] = {:?};\n", days_up_to_month_start);
+
+        let days_up_to_month_start_for_leap_years: [u32; 12] = [0,1,2,3,4,5,6,7,8,9,10,11]
+        .map(|month0| (1..=month0)
+            .map(|month| MONTH_DAYS_LEAP_YEAR[month-1])
+            .sum()
+        );
+        println!("/// same as [DAYS_UP_TO_MONTH_START], but for leap years");
+        println!("const DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS: [u32; 12] = {:?};\n", days_up_to_month_start_for_leap_years);
+    }
 
     /// tests dates to `u32` conversion and vice-versa
     #[cfg_attr(not(feature = "dox"), test)]
@@ -141,5 +152,13 @@ mod tests {
             }
         }
     }
+
+    /// tests we're able to represent all possible dates (in sequence) up to today
+    #[cfg_attr(not(feature = "dox"), test)]
+    fn const_functions() {
+        const EPOCH_DATE: u32 = u32_from_ymd(2022, 5, 23);
+        assert_eq!((2022, 5, 23), ymd_from_u32(EPOCH_DATE), "const date check failed");
+    }
+
 
 }
