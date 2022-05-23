@@ -3,6 +3,8 @@
 
 use lazy_static::lazy_static;
 
+const LEAP_YEAR_FACTOR: f64 = (400.0*365.0 + 400.0/4.0-400.0/100.0+400.0/400.0) / 400.0;
+
 /// days for each month for non-leap years -- January is #0
 const MONTH_DAYS: [u32; 12] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -45,25 +47,10 @@ pub fn u32_from_ymd(year: u16, month: u8, day: u8) -> u32 {
 /// See [u32_from_ymd()] for the reverse operation.
 pub fn ymd_from_u32(date: u32) -> (u16, u8, u8) {
     
-    // TODO 2022-05-22 can't this be turned into a formula?
-    let mut year1 = 1;
-    let mut days_up_to_year_start = 0;
-    loop {
-        if is_leap_year(year1) {
-            if days_up_to_year_start + 366 <= date {
-                days_up_to_year_start += 366;
-            } else {
-                break;
-            }
-        } else {
-            if days_up_to_year_start + 365 <= date {
-                days_up_to_year_start += 365;
-            } else {
-                break;
-            }
-        }
-        year1 += 1;
-    }
+    let year0f = date as f64 / LEAP_YEAR_FACTOR;
+    let mut year1 = year0f as u32 + 1;
+    let leap_days_since_era_start = ((year1-1) / 4 - (year1-1) / 100 + (year1-1) / 400) as u32;
+    let days_up_to_year_start = (leap_days_since_era_start*366) + ((year1 as u32 - leap_days_since_era_start - 1)*365);
 
     let year_day = date - days_up_to_year_start;
     let days_to_month_start = if is_leap_year(year1 as u16) {
@@ -133,7 +120,6 @@ mod tests {
     /// tests we're able to represent all possible dates (in sequence) up to today
     #[cfg_attr(not(feature = "dox"), test)]
     fn comprehensive_representation() {
-        dbg!(DAYS_UP_TO_MONTH_START.as_ref());
         let mut expected_u32_date = 0;
         for year in 1..=2022 {
             let month_days = if is_leap_year(year) {
