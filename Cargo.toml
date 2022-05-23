@@ -1,6 +1,6 @@
 [package]
 name = "neat-date-time"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 description   = "(native) Types & operations to allow space efficient storage of dates and times"
 keywords      = ["packed", "compact", "dense", "date", "time"]
