@@ -3,6 +3,7 @@
 
 use lazy_static::lazy_static;
 
+/// how many fractional days there is in a year
 const LEAP_YEAR_FACTOR: f64 = (400.0*365.0 + 400.0/4.0-400.0/100.0+400.0/400.0) / 400.0;
 
 /// days for each month for non-leap years -- January is #0
