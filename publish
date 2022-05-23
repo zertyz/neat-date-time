@@ -9,7 +9,7 @@ git status -s | grep -E ' M |\?\?' &&
 echo " OK"
 
 echo -en "  Getting unpublished version stated in Cargo.tom..."
-UNPUBLISHED_VERSION=`grep version Cargo.toml | sed 's|[^"]*"\(.*\)"|\1|'`
+UNPUBLISHED_VERSION=`grep --max-count 1 version Cargo.toml | sed 's|[^"]*"\(.*\)"|\1|'`
 echo " ${UNPUBLISHED_VERSION} OK"
 
 echo -en "  Publishing to crates.io:"
