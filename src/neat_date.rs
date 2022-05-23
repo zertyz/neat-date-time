@@ -71,7 +71,7 @@ pub fn ymd_from_u32(date: u32) -> (u16, u8, u8) {
     } else {
         DAYS_UP_TO_MONTH_START.as_ref()
     };
-    let mut month0 = (year_day / 31);    // hint to the loop bellow... causing it to loop only once or, on most times, not loop at all
+    let mut month0 = year_day / 31;    // hint to the loop bellow... causing it to loop only once or, on most times, not loop at all
     loop {
         if days_to_month_start[month0 as usize] <= year_day {
             break;
