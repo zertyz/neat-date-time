@@ -1,4 +1,3 @@
-# from https://www.infinyon.com/blog/2021/04/github-actions-best-practices/
 name: Rust
 
 on:
