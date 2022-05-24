@@ -20,22 +20,22 @@ jobs:
             sccache-path: /home/runner/.cache/sccache
           - os: macos-latest
             sccache-path: /Users/runner/Library/Caches/Mozilla.sccache
-        exclude:
-          - os: macos-latest
-            rust: stable
-            make:
-              name: Clippy
-          - os: windows-latest
-            rust: stable
-            make:
-              name: Clippy
+#        exclude:
+#          - os: macos-latest
+#            rust: stable
+#            make:
+#              name: Clippy
+#          - os: windows-latest
+#            rust: stable
+#            make:
+#              name: Clippy
     env:
       CARGO_TERM_COLOR: always
       RUST_BACKTRACE: full
-      RUSTC_WRAPPER: sccache
+#      RUSTC_WRAPPER: sccache
       RUSTV: ${{ matrix.rust }}
-      SCCACHE_CACHE_SIZE: 2G
-      SCCACHE_DIR: ${{ matrix.sccache-path }}
+#      SCCACHE_CACHE_SIZE: 2G
+#      SCCACHE_DIR: ${{ matrix.sccache-path }}
       # SCCACHE_RECACHE: 1 # Uncomment this to clear cache, then comment it back out
     steps:
       - uses: actions/checkout@v3
