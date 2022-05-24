@@ -17,15 +17,15 @@ jobs:
         rust: [stable]
         make:
           - name: Clippy
-            run: "cargo clippy"
+            cmd: "cargo clippy"
           - name: Build
-            run: "cargo build"
+            cmd: "cargo build"
           - name: Unit tests (compile)
-            run: "cargo test --no-run"
+            cmd: "cargo test --no-run"
           - name: Unit tests (run)
-            run: "cargo test --no-fail-fast"
+            cmd: "cargo test --no-fail-fast"
           - name: Ignore tests
-            run: "cargo test --no-fail-fast --test-threads=1 --ignored"
+            cmd: "cargo test --no-fail-fast --test-threads=1 --ignored"
         include:
           - os: ubuntu-latest
             sccache-path: /home/runner/.cache/sccache
@@ -88,8 +88,8 @@ jobs:
                         ${{ runner.os }}-sccache-
       - name: Start sccache server
         run: sccache --start-server
-      - name: TASK ${{ matrix.make.name }}
-        run: bash -c "echo HERE; ${{matrix.make.task}}"
+      - name: TASK ${{matrix.make.name}}
+        run: ${{matrix.make.cmd}}
       - name: Print sccache stats
         run: sccache --show-stats
       - name: Stop sccache server
