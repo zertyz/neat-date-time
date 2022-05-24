@@ -1,4 +1,12 @@
 # neat-date-time crate
+======================
+
+[gh-image]: https://github.com/zertyz/neat-date-time/workflows/test/badge.svg
+[gh-checks]: https://github.com/zertyz/neat-date-time/actions?query=workflow%3Atest
+[cratesio-image]: https://img.shields.io/crates/v/neat-date-time.svg
+[cratesio]: https://crates.io/crates/neat-date-time
+[docsrs-image]: https://docs.rs/neat-date-time/badge.svg
+[docsrs]: https://docs.rs/neat-date-time
 
 [![neat-date-time GitHub Actions][gh-image]][gh-checks]
 [![neat-date-time on crates.io][cratesio-image]][cratesio]
@@ -6,6 +14,8 @@
 
 Dense & serializable representations of dates & times, providing
 native types & operations to allow space efficient storage.
+
+[Docs][docsrs]
 
 
 # Problem statement
