@@ -1,8 +1,8 @@
 # neat-date-time crate
 ======================
 
-[gh-image]: https://github.com/zertyz/neat-date-time/workflows/test/badge.svg
-[gh-checks]: https://github.com/zertyz/neat-date-time/actions/workflows/rust.yml?query=CI
+[gh-image]: https://github.com/zertyz/neat-date-time/workflows/Rust/badge.svg
+[gh-checks]: https://github.com/zertyz/neat-date-time/actions/workflows/rust.yml
 [cratesio-image]: https://img.shields.io/crates/v/neat-date-time.svg
 [cratesio]: https://crates.io/crates/neat-date-time
 [docsrs-image]: https://docs.rs/neat-date-time/badge.svg
