@@ -1,5 +1,4 @@
 # neat-date-time crate
-======================
 
 [gh-image]: https://github.com/zertyz/neat-date-time/workflows/Rust/badge.svg
 [gh-checks]: https://github.com/zertyz/neat-date-time/actions/workflows/rust.yml
