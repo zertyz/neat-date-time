@@ -1,5 +1,9 @@
 # neat-date-time crate
 
+[![neat-date-time GitHub Actions][gh-image]][gh-checks]
+[![neat-date-time on crates.io][cratesio-image]][cratesio]
+[![neat-date-time on docs.rs][docsrs-image]][docsrs]
+
 Dense & serializable representations of dates & times, providing
 native types & operations to allow space efficient storage.
 
