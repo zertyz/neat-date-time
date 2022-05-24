@@ -1,12 +1,13 @@
+# from https://www.infinyon.com/blog/2021/04/github-actions-best-practices/
 name: Rust
 
 on:
+  push:
   pull_request:
   workflow_dispatch:
   
 env:
   CARGO_TERM_COLOR: always
-
 jobs:
   tests:
     name: ${{ matrix.make.name }} (${{ matrix.os }})
