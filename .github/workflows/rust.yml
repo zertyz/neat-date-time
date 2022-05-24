@@ -16,16 +16,16 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         rust: [stable]
         make:
-          - name: Clippy
-            cmd: "cargo clippy"
+          #- name: Clippy
+          #  cmd: "cargo clippy"
           - name: Build
             cmd: "cargo build"
           - name: Unit tests (compile)
             cmd: "cargo test --no-run"
           - name: Unit tests (run)
-            cmd: "cargo test --no-fail-fast"
-          - name: Ignore tests
-            cmd: "cargo test --no-fail-fast --test-threads=1 --ignored"
+            cmd: "cargo test -- --no-fail-fast"
+          - name: Ignored tests
+            cmd: "cargo test -- --no-fail-fast --test-threads=1 --ignored"
         include:
           - os: ubuntu-latest
             sccache-path: /home/runner/.cache/sccache
