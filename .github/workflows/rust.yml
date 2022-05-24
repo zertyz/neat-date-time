@@ -6,8 +6,6 @@ on:
   pull_request:
   workflow_dispatch:
   
-env:
-  CARGO_TERM_COLOR: always
 jobs:
   tests:
     name: ${{ matrix.make.name }} (${{ matrix.os }})
@@ -39,6 +37,7 @@ jobs:
             make:
               name: Clippy
     env:
+      CARGO_TERM_COLOR: always
       RUST_BACKTRACE: full
       RUSTC_WRAPPER: sccache
       RUSTV: ${{ matrix.rust }}
@@ -46,7 +45,7 @@ jobs:
       SCCACHE_DIR: ${{ matrix.sccache-path }}
       # SCCACHE_RECACHE: 1 # Uncomment this to clear cache, then comment it back out
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install sccache (ubuntu-latest)
         if: matrix.os == 'ubuntu-latest'
         env:
@@ -70,7 +69,7 @@ jobs:
           profile: minimal
           override: true
       - name: Cache cargo registry
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         continue-on-error: false
         with:
           path: |
@@ -80,7 +79,7 @@ jobs:
           restore-keys: |
                         ${{ runner.os }}-cargo-
       - name: Save sccache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         continue-on-error: false
         with:
           path: ${{ matrix.sccache-path }}
@@ -89,8 +88,8 @@ jobs:
                         ${{ runner.os }}-sccache-
       - name: Start sccache server
         run: sccache --start-server
-      - name: ${{ matrix.make.name }}
-        run: ${{ matrix.make.task }}
+      - name: TASK ${{ matrix.make.name }}
+        run: bash -c "echo HERE; ${{matrix.make.task}}"
       - name: Print sccache stats
         run: sccache --show-stats
       - name: Stop sccache server
