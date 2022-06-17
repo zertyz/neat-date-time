@@ -153,7 +153,7 @@ mod tests {
         }
     }
 
-    /// tests we're able to represent all possible dates (in sequence) up to today
+    /// tests our date functions can initialize constants
     #[cfg_attr(not(feature = "dox"), test)]
     fn const_functions() {
         const EPOCH_DATE: u32 = u32_from_ymd(2022, 5, 23);

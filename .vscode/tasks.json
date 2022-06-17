@@ -13,13 +13,28 @@
 		{
 			"type": "cargo",
 			"command": "test",
-			"args": ["--", "--show-output"],
+			"args": [
+				"--",
+				"--show-output"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "rust cargo test (with output)"
+		},
+		{
+			"type": "cargo",
+			"command": "test",
+			"args": [
+				"--",
+				"--show-output"
+			],
 			"problemMatcher": [
 				"$rustc"
 			],
 			"group": "build",
 			"label": "rust cargo test (with output)"
 		}
-
 	]
 }
