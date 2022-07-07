@@ -11,11 +11,36 @@ const MONTH_DAYS: [u32; 12] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const MONTH_DAYS_LEAP_YEAR: [u32; 12] = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 /// year's completed days when each month starts -- January: #0 = 0, meaning: zero completed days for the year at Jan 1st
-const DAYS_UP_TO_MONTH_START: [u32; 12] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+const DAYS_UP_TO_MONTH_START: [u32; 12] = {
+    let mut days_up_to_month_start = [0; 12];
+    let mut partial_sum = 0;
+    let mut month = 0;
+    while month < 12 {
+        days_up_to_month_start[month] = partial_sum;
+        partial_sum += MONTH_DAYS[month];
+        month += 1;
+    }
+    days_up_to_month_start
+};
 
 /// same as [DAYS_UP_TO_MONTH_START], but for leap years
-const DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS: [u32; 12] = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
-
+const DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS: [u32; 12] = {
+    let mut days_up_to_month_start_for_leap_years = [0; 12];
+    let mut partial_sum = 0;
+    let mut month = 0;
+    while month < 12 {
+        days_up_to_month_start_for_leap_years[month] = partial_sum;
+        partial_sum += MONTH_DAYS_LEAP_YEAR[month];
+        month += 1;
+    }
+    days_up_to_month_start_for_leap_years
+};
+// TODO improve the above 2 consts to the following, if stable Rust would ever allow "const iterators" -- for which we traverse all of it:
+// const DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS: [u32; 12] = [0,1,2,3,4,5,6,7,8,9,10,11]
+//     .map(|month0| (1..=month0)
+//         .map(|month| MONTH_DAYS_LEAP_YEAR[month-1])
+//         .sum()
+//     );
 
 /// returns a `u32` to represent a "naive date" (with no timezone consideration) from
 /// the given `year`, `month` and `day`.\
@@ -35,7 +60,7 @@ pub const fn u32_from_ymd(year: u16, month: u8, day: u8) -> u32 {
 
 /// returns the `year`, `month` and `day` represented by the give u32 naive `date`.\
 /// See [u32_from_ymd()] for the reverse operation.
-pub fn ymd_from_u32(date: u32) -> (u16, u8, u8) {
+pub /*const*/ fn ymd_from_u32(date: u32) -> (u16, u8, u8) {
     
     let year0f = date as f64 / LEAP_YEAR_FACTOR;
     let year0 = year0f as u32;
@@ -98,28 +123,6 @@ pub const fn is_leap_year(year1: u16) -> bool {
 mod tests {
     use super::*;
 
-    /// unusual test function to generate our "complex" constants.\
-    /// NOTE: using lazy_static is not an option, as lazy_static outcomes cannot be used in const functions.\
-    /// TODO: when Rust allows [].map(|| ...); for constants, we may drop this hack
-    #[cfg_attr(not(feature = "dox"), test)]
-    fn build_constants() {
-        let days_up_to_month_start: [u32; 12] = [0,1,2,3,4,5,6,7,8,9,10,11]
-        .map(|month0| (1..=month0)
-            .map(|month| MONTH_DAYS[month-1])
-            .sum()
-        );
-        println!("/// year's completed days when each month starts -- January: #0 = 0, meaning: zero completed days for the year at Jan 1st");
-        println!("const DAYS_UP_TO_MONTH_START: [u32; 12] = {:?};\n", days_up_to_month_start);
-
-        let days_up_to_month_start_for_leap_years: [u32; 12] = [0,1,2,3,4,5,6,7,8,9,10,11]
-        .map(|month0| (1..=month0)
-            .map(|month| MONTH_DAYS_LEAP_YEAR[month-1])
-            .sum()
-        );
-        println!("/// same as [DAYS_UP_TO_MONTH_START], but for leap years");
-        println!("const DAYS_UP_TO_MONTH_START_FOR_LEAP_YEARS: [u32; 12] = {:?};\n", days_up_to_month_start_for_leap_years);
-    }
-
     /// tests dates to `u32` conversion and vice-versa
     #[cfg_attr(not(feature = "dox"), test)]
     fn naive_date_conversions() {
@@ -130,7 +133,8 @@ mod tests {
         assert_eq!((reconstructed_year, reconstructed_month, reconstructed_day), (original_year, original_month, original_day), "naive dates <--> u32 conversions failed");
     }
 
-    /// tests we're able to represent all possible dates (in sequence) up to today
+    /// tests we're able to represent all possible dates in sequence -- from year 1 up to today;\
+    /// proves the "sequential / non-skipping" aspect of our dates representation
     #[cfg_attr(not(feature = "dox"), test)]
     fn comprehensive_representation() {
         let mut expected_u32_date = 0;
@@ -150,6 +154,24 @@ mod tests {
                     expected_u32_date += 1;
                 }
             }
+        }
+    }
+
+    /// attests our date conversions remain feithful to their once encoded values, taking a sample as proof --
+    /// we are bound to produce the same results throughout all of 0.1.* version series (at least).\
+    /// Note that the mentioned attestation is fully issued when both this and the "sequential / non-skipping"
+    /// aspect of our dates representation is given by [comprehensive_representation()]
+    #[cfg_attr(not(feature = "dox"), test)]
+    fn stable_encoding() {
+        let known_ymd_and_u32_dates = [
+            (2022, 07, 06, 738341),
+            (2022, 05, 23, 738297),
+        ];
+        for (year, month, day, u32_date) in known_ymd_and_u32_dates {
+            let observed_u32_date = u32_from_ymd(year, month, day);
+            assert_eq!(observed_u32_date, u32_date, "`u32_from_ymd({}, {}, {})` no longer prduces the same results", year, month, day);
+            let (reconstructed_year, reconstructed_month, reconstructed_day) = ymd_from_u32(u32_date);
+            assert_eq!((reconstructed_year, reconstructed_month, reconstructed_day), (year, month, day), "`ymd_from_u32({})` no longer prduces the same results", u32_date);
         }
     }
 
