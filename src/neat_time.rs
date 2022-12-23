@@ -78,12 +78,12 @@ pub fn systemtime_from_10µs_precision_u32(duration: u32, epoch: &SystemTime) ->
 }
 
 
-#[cfg(any(test, feature = "dox"))]
+#[cfg(any(test,doctest))]
 mod tests {
     use super::*;
 
     /// tests (the almost 12h range) 10µs precision time conversions to `u32` and vice-versa
-    #[cfg_attr(not(feature = "dox"), test)]
+    #[cfg_attr(doctest,test)]
     fn test_10µs_precision_functions() {
         let valid_durations = [
             Duration::from_micros(0),
@@ -101,7 +101,7 @@ mod tests {
     }
 
     /// tests (the almost 24hs range) time conversions to `u32` and vice-versa
-    #[cfg_attr(not(feature = "dox"), test)]
+    #[cfg_attr(doctest,test)]
     fn test_24h_range_functions() {
         let valid_durations = [
             Duration::from_micros(0),
@@ -127,7 +127,7 @@ mod tests {
     }
 
     /// tests 24hs times to string
-    #[cfg_attr(not(feature = "dox"), test)]
+    #[cfg_attr(doctest,test)]
     fn test_24h_range_to_string() {
         assert_eq!(string_from_24h_u32(1),                                                 "00:00:00.000.020", "Minimum time quantum check");
         assert_eq!(string_from_24h_u32(u32_from_24h_duration(&Duration::from_millis(1))),  "00:00:00.001.006", "Millis check");

@@ -24,3 +24,8 @@ license       = "Unlicense"
 #chrono = "0.4"     # Date and time library for Rust
 
 # eventually chrono will be moved to [dependencies], if we are ever to support NaiveDate conversions
+
+[package.metadata.docs.rs]
+
+rustdoc-args = ["--document-private-items"]     # enables full documentation (including test modules and test cases)
+

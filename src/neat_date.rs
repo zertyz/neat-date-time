@@ -119,12 +119,12 @@ pub const fn is_leap_year(year1: u16) -> bool {
 }
 
 
-#[cfg(any(test, feature = "dox"))]
+#[cfg(any(test,doctest))]
 mod tests {
     use super::*;
 
     /// tests dates to `u32` conversion and vice-versa
-    #[cfg_attr(not(feature = "dox"), test)]
+    #[cfg_attr(doctest,test)]
     fn naive_date_conversions() {
         let (original_year, original_month, original_day) = (1979, 01, 22);
         let epoch = u32_from_ymd(original_year as u16, original_month as u8, original_day as u8);
@@ -135,7 +135,7 @@ mod tests {
 
     /// tests we're able to represent all possible dates in sequence -- from year 1 up to today;\
     /// proves the "sequential / non-skipping" aspect of our dates representation
-    #[cfg_attr(not(feature = "dox"), test)]
+    #[cfg_attr(doctest,test)]
     fn comprehensive_representation() {
         let mut expected_u32_date = 0;
         for year in 1..=2022 {
@@ -161,7 +161,7 @@ mod tests {
     /// we are bound to produce the same results throughout all of 0.1.* version series (at least).\
     /// Note that the mentioned attestation is fully issued when both this and the "sequential / non-skipping"
     /// aspect of our dates representation is given by [comprehensive_representation()]
-    #[cfg_attr(not(feature = "dox"), test)]
+    #[cfg_attr(doctest,test)]
     fn stable_encoding() {
         let known_ymd_and_u32_dates = [
             (2022, 07, 06, 738341),
@@ -176,7 +176,7 @@ mod tests {
     }
 
     /// tests our date functions can initialize constants
-    #[cfg_attr(not(feature = "dox"), test)]
+    #[cfg_attr(doctest,test)]
     fn const_functions() {
         const EPOCH_DATE: u32 = u32_from_ymd(2022, 5, 23);
         assert_eq!((2022, 5, 23), ymd_from_u32(EPOCH_DATE), "const date check failed");
