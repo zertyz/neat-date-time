@@ -1,6 +1,6 @@
 [package]
 name = "neat-date-time"
-version = "0.1.10"
+version = "0.2.0"
 edition = "2021"
 description   = "(native) Types & operations to allow space efficient storage of dates and times"
 keywords      = ["packed", "compact", "dense", "date", "time"]
@@ -17,15 +17,8 @@ license       = "Unlicense"
 
 [dependencies]
 
-#lazy_static = "1.4"
-
 [build.dependencies]
-
-#chrono = "0.4"     # Date and time library for Rust
-
-# eventually chrono will be moved to [dependencies], if we are ever to support NaiveDate conversions
 
 [package.metadata.docs.rs]
 
-rustdoc-args = ["--document-private-items"]     # enables full documentation (including test modules and test cases)
-
+rustdoc-args = ["--document-private-items"]     # attempt to enable full documentation (including test modules and test cases)
